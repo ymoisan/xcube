@@ -63,7 +63,13 @@ class ServiceConfigTest(unittest.TestCase):
                             "Identifier": "*.zarr",
                             "Style": "default"
                         }
-                    ]
+                    ],
+                    "AccessControl": {
+                        "IsSubstitute": False,
+                        "RequiredScopes": [
+                            "read: datasets"
+                        ]
+                    }
                 },
             ]
         }
@@ -75,3 +81,20 @@ class ServiceConfigTest(unittest.TestCase):
         self.assertIsInstance(service_config.Datasets[0], DatasetConfig)
         self.assertTrue(hasattr(service_config.Datasets[0], 'Identifier'))
         self.assertEqual("local", service_config.Datasets[0].Identifier)
+
+        self.assertTrue(hasattr(service_config, 'DataStores'))
+        self.assertIsInstance(service_config.DataStores, list)
+        self.assertEqual(1, len(service_config.DataStores))
+        self.assertTrue(hasattr(service_config.DataStores[0], 'Identifier'))
+        self.assertTrue(hasattr(service_config.DataStores[0], 'AccessControl'))
+        self.assertFalse(service_config.DataStores[0].AccessControl.get('IsSubstitute',
+                                                                       True))
+        self.assertIsInstance(
+            service_config.DataStores[0].AccessControl.get('RequiredScopes'),
+            list
+        )
+        self.assertIn('read: datasets',
+                      service_config.DataStores[0].AccessControl.get('RequiredScopes')
+        )
+
+

@@ -167,6 +167,7 @@ class DataStoreConfig(_ConfigObject):
                 StoreParams=JsonObjectSchema(
                     additional_properties=True,
                 ),
+                AccessControl=AccessControl.get_schema(),
                 Datasets=JsonArraySchema(
                     items=DataStoreDatasetConfig.get_schema(),
                 ),
