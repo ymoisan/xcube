@@ -51,9 +51,13 @@ class ComputeArrayExprTest(unittest.TestCase):
     def test_invalid_exprs(self):
         with self.assertRaises(ValueError) as cm:
             compute_expr('20. -')
-        self.assertEqual("failed computing expression '20. -': "
-                         "unexpected EOF while parsing (<string>, line 1)",
-                         f'{cm.exception}')
+        exception_messages = \
+            ["failed computing expression '20. -': "
+             "unexpected EOF while parsing (<string>, line 1)",
+             "failed computing expression '20. -': "
+             "invalid syntax (<string>, line 1)"
+             ]
+        self.assertIn(f'{cm.exception}', exception_messages)
 
         with self.assertRaises(ValueError) as cm:
             compute_expr('2 - a')
@@ -142,9 +146,13 @@ class ComputeExprTest(unittest.TestCase):
     def test_invalid_exprs(self):
         with self.assertRaises(ValueError) as cm:
             compute_expr('20. -')
-        self.assertEqual("failed computing expression '20. -': "
-                         "unexpected EOF while parsing (<string>, line 1)",
-                         f'{cm.exception}')
+        exception_messages = \
+            ["failed computing expression '20. -': "
+             "unexpected EOF while parsing (<string>, line 1)",
+             "failed computing expression '20. -': "
+             "invalid syntax (<string>, line 1)"
+             ]
+        self.assertIn(f'{cm.exception}', exception_messages)
 
         with self.assertRaises(ValueError) as cm:
             compute_expr('2 - a')
