@@ -1,4 +1,87 @@
-## Changes in 0.9.3 (in development)
+## Changes in 0.10.2 (in development)
+
+### Enhancements
+
+* For authorized clients, the xcube Web API provided by `xcube serve`
+  now allows granted scopes to contain wildcard characters `*`, `**`,
+  and `?`. This is useful to give access to groups of datasets, e.g.
+  the scope `read:dataset:*/S2-*.zarr` permits access to any Zarr 
+  dataset in a subdirectory of the configured data stores and 
+  whose name starts with "S2-". (#632)
+
+* `xcube serve` used to shut down with an error message 
+  if it encountered datasets it could not open. New behaviour 
+  is to emit a warning and ignore such datasets. (#630)
+
+* Introduced helper function `add_spatial_ref()`
+  of package `xcube.core.gridmapping.cfconv` that allows 
+  adding a spatial coordinate reference system to an existing  
+  Zarr dataset. (#629)
+
+* Support for multi-level datasets has been improved:
+  - Introduced parameter `base_dataset_id` for writing multi-level 
+    datasets with the "file", "s3", and "memory" data stores. 
+    If given, the base dataset will be linked only with the 
+    value of `base_dataset_id`, instead of being copied as-is.
+    This can save large amounts of storage space. (#617)
+  - Introduced parameter `tile_size` for writing multi-level 
+    datasets with the "file", "s3", and "memory" data stores. 
+    If given, it forces the spatial dimensions to use the specified 
+    chunking.
+  - Added a new example notebook 
+    [5_multi_level_datasets.ipynb](https://github.com/dcs4cop/xcube/blob/master/examples/notebooks/datastores/5_multi_level_datasets.ipynb) 
+    that demonstrates writing and opening multi-level datasets with the 
+    xcube filesystem data stores.
+  - Specified [xcube Multi-Resolution Datasets](https://github.com/dcs4cop/xcube/blob/master/docs/source/mldatasets.md)
+    definition and format.
+
+* `xcube gen2` returns more expressive error messages.
+  
+### Fixes
+
+* Fixed `FsDataAccessor.write_data()` implementations, 
+  which now always return the passed in `data_id`. (#623)
+
+* Fixes an issue where some datasets seemed to be shifted in the 
+  y-(latitude-) direction and were misplaced on maps whose tiles 
+  are served by `xcube serve`. Images with ascending y-values are 
+  now tiled correctly. (#626)
+
+### Other
+
+* Added packages `python-blosc` and `lz4` to the xcube Python environment 
+  for better support of Dask `distributed` and the Dask service 
+  [Coiled](https://coiled.io/).
+
+* Replace the dependency on the `rfc3339-validator` PyPI package with a
+  dependency on its recently created conda-forge package.
+
+* Remove unneeded dependency on the no longer used `strict-rfc3339` package.
+
+## Changes in 0.10.1
+
+### Fixes
+
+* Deprecated argument `xy_var_names` in function `GridMapping.from_dataset`,
+  thereby preventing a NotImplementedError. (#551) 
+
+### Other Changes
+
+* For compatibility, now also `xcube.__version__` contains the xcube 
+  version number.
+
+## Changes in 0.10.0
+
+### Incompatible Changes 
+
+* The configuration `DataStores` for `xcube serve` changed in an
+  incompatible way with xcube 0.9.x: The value of former `Identifier` 
+  must now be assigned to `Path`, which is a mandatory parameter. 
+  `Path` may contain wildcard characters \*\*, \*, ?. 
+  `Identifier` is now optional, the default is 
+  `"${store_id}~${data_id}"`. If given, it should only be used to 
+  uniquely identify single datasets within a data store
+  pointed to by `Path`. (#516) 
 
 ### Enhancements
 
@@ -41,12 +124,12 @@
   
 ### Other
 
-* Pinned Python version to < 3.10 to avoid ImportErrors caused by a third-party
-  library.
+* Pinned Python version to < 3.10 to avoid import errors caused by a 
+  third-party library.
 
-* Values `obs` and `local` for the `FileSystem` parameter in xcube configuration
-  files have been replaced by `s3` and `file`, but are kept temporarily for
-  the sake of backwards compatibility.
+* Values `obs` and `local` for the `FileSystem` parameter in xcube 
+  configuration files have been replaced by `s3` and `file`, but are kept 
+  temporarily for the sake of backwards compatibility.
 
 ## Changes in 0.9.2
 
